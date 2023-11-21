@@ -60,8 +60,12 @@ public class ProdutoController {
 
     //operacao Delete
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        //falta implementar o tratamento de erro para a operacao Delete
-        produtoRepository.deleteById(id);
+    public ResponseEntity delete(@PathVariable Long id) {
+        if(produtoRepository.existsById(id)){
+            produtoRepository.deleteById(id);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }else{
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 }
