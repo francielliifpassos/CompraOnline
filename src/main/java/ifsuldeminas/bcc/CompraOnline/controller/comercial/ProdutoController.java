@@ -1,7 +1,7 @@
 package ifsuldeminas.bcc.CompraOnline.controller.comercial;
 
 import ifsuldeminas.bcc.CompraOnline.model.domain.comercial.Produto;
-import ifsuldeminas.bcc.CompraOnline.model.exceptions.comercial.ProdutoNotFoundException;
+import ifsuldeminas.bcc.CompraOnline.exceptions.comercial.ProdutoNotFoundException;
 import ifsuldeminas.bcc.CompraOnline.model.services.comercial.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/produto")

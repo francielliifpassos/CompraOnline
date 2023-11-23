@@ -2,7 +2,7 @@ package ifsuldeminas.bcc.CompraOnline.model.services.comercial;
 
 import ifsuldeminas.bcc.CompraOnline.model.domain.comercial.Produto;
 import ifsuldeminas.bcc.CompraOnline.model.repositories.comercial.ProdutoRepository;
-import ifsuldeminas.bcc.CompraOnline.model.exceptions.comercial.ProdutoNotFoundException;
+import ifsuldeminas.bcc.CompraOnline.exceptions.comercial.ProdutoNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
