@@ -33,33 +33,21 @@ public class ProdutoController {
 
     @GetMapping("/{id}")
     public ResponseEntity show(@PathVariable Long id){
-        try{
-            Produto produto = this.produtoService.getById(id);
-            return new ResponseEntity<Produto>(produto, HttpStatus.OK);
-        }catch (ProdutoNotFoundException pe){
-            return new ResponseEntity<String>(pe.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        Produto produto = this.produtoService.getById(id);
+        return new ResponseEntity<Produto>(produto, HttpStatus.OK);
     }
 
     //operacao Updade
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable Long id, @Valid @RequestBody Produto produto){
-        try{
-            return new ResponseEntity<Produto>(this.produtoService.update(id, produto),
+        return new ResponseEntity<Produto>(this.produtoService.update(id, produto),
                     HttpStatus.OK);
-        }catch (ProdutoNotFoundException pe){
-            return new ResponseEntity<String>(pe.getMessage(), HttpStatus.NOT_FOUND);
-        }
     }
 
     //operacao Delete
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        try{
-            this.produtoService.deleteById(id);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }catch(ProdutoNotFoundException pe){
-            return new ResponseEntity<String>(pe.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        this.produtoService.deleteById(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }
