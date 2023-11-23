@@ -1,7 +1,8 @@
 package ifsuldeminas.bcc.CompraOnline.controller.comercial;
 
 import ifsuldeminas.bcc.CompraOnline.model.domain.comercial.Produto;
-import ifsuldeminas.bcc.CompraOnline.model.repositories.comercial.ProdutoRepository;
+import ifsuldeminas.bcc.CompraOnline.model.exceptions.comercial.ProdutoNotFoundException;
+import ifsuldeminas.bcc.CompraOnline.model.services.comercial.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,59 +14,53 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/produto")
 public class ProdutoController {
-    private ProdutoRepository produtoRepository;
+    private ProdutoService produtoService;
 
-    public ProdutoController(ProdutoRepository produtoRepository){
-        this.produtoRepository = produtoRepository;
+    public ProdutoController(ProdutoService produtoService){
+        this.produtoService = produtoService;
     }
 
     //operacao Create
     @PostMapping
     public Produto save(@Valid @RequestBody Produto produto){
-        return this.produtoRepository.save(produto);
+        return this.produtoService.save(produto);
     }
 
     //operacao Read
     @GetMapping
     public List<Produto> list(){
-        return this.produtoRepository.findAll();
+        return this.produtoService.list();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> show(@PathVariable Long id){
-        Optional<Produto> opt = produtoRepository.findById(id);
-        if(opt.isPresent()){
-            Produto produto = opt.get();
+    public ResponseEntity show(@PathVariable Long id){
+        try{
+            Produto produto = this.produtoService.getById(id);
             return new ResponseEntity<Produto>(produto, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<Produto>(HttpStatus.NOT_FOUND);
+        }catch (ProdutoNotFoundException pe){
+            return new ResponseEntity<String>(pe.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     //operacao Updade
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> update(@PathVariable Long id, @Valid @RequestBody Produto produto){
-        Optional<Produto> opt = produtoRepository.findById(id);
-        if(opt.isPresent()){
-            Produto produtoAux = opt.get();
-            produtoAux.setNome(produto.getNome());
-            produtoAux.setDescricao(produto.getDescricao());
-            produtoAux.setPreco(produto.getPreco());
-            produtoRepository.save(produtoAux);
-            return new ResponseEntity<Produto>(produtoAux, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<Produto>(HttpStatus.NOT_FOUND);
+    public ResponseEntity update(@PathVariable Long id, @Valid @RequestBody Produto produto){
+        try{
+            return new ResponseEntity<Produto>(this.produtoService.update(id, produto),
+                    HttpStatus.OK);
+        }catch (ProdutoNotFoundException pe){
+            return new ResponseEntity<String>(pe.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     //operacao Delete
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        if(produtoRepository.existsById(id)){
-            produtoRepository.deleteById(id);
+        try{
+            this.produtoService.deleteById(id);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }else{
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }catch(ProdutoNotFoundException pe){
+            return new ResponseEntity<String>(pe.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
